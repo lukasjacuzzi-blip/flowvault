@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>FlowVault — Fokus, Habits & Tresor</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <meta name="theme-color" content="#06b6d4" />
+</head>
+<body>
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="top-bar glass-card">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <h1>FlowVault</h1>
+      </div>
+      <div class="top-actions">
+        <span id="focusSessionBadge" class="badge-pill">0 Sessions</span>
+        <button id="themeToggleBtn" class="icon-btn" title="Design wechseln" aria-label="Theme wechseln">
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- 4-Tab Navigation -->
+    <nav class="tab-nav glass-card" role="tablist">
+      <button class="nav-pill active" data-tab="focus">Fokus</button>
+      <button class="nav-pill" data-tab="habits">Habits</button>
+      <button class="nav-pill" data-tab="qr">QR & WLAN</button>
+      <button class="nav-pill" data-tab="vault">Tresor</button>
+    </nav>
+
+    <!-- TAB 1: POMODORO FOKUS-TIMER & SOUNDSCAPE -->
+    <main id="tab-focus" class="tab-view active">
+      <section class="glass-card timer-card">
+        <div class="preset-row">
+          <button class="chip-btn active" data-minutes="25">25m Fokus</button>
+          <button class="chip-btn" data-minutes="5">5m Pause</button>
+          <button class="chip-btn" data-minutes="15">15m Lang</button>
+          <button class="chip-btn" data-minutes="45">45m Deep</button>
+        </div>
+
+        <div class="timer-ring-box">
+          <svg class="timer-svg" viewBox="0 0 220 220">
+            <circle class="ring-bg" cx="110" cy="110" r="96"></circle>
+            <circle id="timerProgressRing" class="ring-fg" cx="110" cy="110" r="96" stroke-dasharray="603.19" stroke-dashoffset="0"></circle>
+          </svg>
+          <div class="timer-center">
+            <div id="timerDisplay" class="timer-digits">25:00</div>
+            <span id="timerStateLabel" class="muted-label">Bereit zum Start</span>
+          </div>
+        </div>
+
+        <div class="timer-controls">
+          <button id="timerStartPauseBtn" class="primary-btn">▶ Starten</button>
+          <button id="timerResetBtn" class="secondary-btn">↺ Reset</button>
+        </div>
+      </section>
+
+      <section class="glass-card sound-card">
+        <div class="section-head">
+          <h2>Fokus-Klangwelt (Web Audio)</h2>
+          <span id="soundStatusLabel" class="muted-label">Aus</span>
+        </div>
+        <div class="sound-grid">
+          <button class="sound-tile active" data-sound="off">🔇 Stumm</button>
+          <button class="sound-tile" data-sound="rain">🌧️ Regen</button>
+          <button class="sound-tile" data-sound="brown">🌊 Tiefes Rauschen</button>
+          <button class="sound-tile" data-sound="binaural">🎧 Alpha-Fokus</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- TAB 2: HABIT-TRACKER & STREAKS -->
+    <section id="tab-habits" class="tab-view">
+      <section class="glass-card">
+        <div class="section-head">
+          <h2>Heutige Gewohnheiten</h2>
+          <span id="habitTodayScore" class="badge-pill">0 / 0 erledigt</span>
+        </div>
+        <form id="habitForm" class="inline-form">
+          <input type="text" id="habitTitleInput" class="glass-input" placeholder="Neue Gewohnheit (z.B. 2L Wasser, Lesen)..." maxlength="36" required />
+          <button type="submit" class="primary-btn small">+</button>
+        </form>
+      </section>
+
+      <div id="habitList" class="habit-list"></div>
+    </section>
+
+    <!-- TAB 3: QR-CODE & WLAN-STUDIO -->
+    <section id="tab-qr" class="tab-view">
+      <section class="glass-card qr-card">
+        <div class="type-switch">
+          <button type="button" class="qr-mode-btn active" data-qr-mode="wifi">📶 WLAN teilen</button>
+          <button type="button" class="qr-mode-btn" data-qr-mode="text">🔗 Link / Text</button>
+        </div>
+
+        <div id="qrWifiFields" class="stack-form">
+          <input type="text" id="wifiSsid" class="glass-input" placeholder="WLAN-Name (SSID)" value="MeinZuhause_WLAN" />
+          <div class="two-cols">
+            <input type="text" id="wifiPass" class="glass-input" placeholder="WLAN-Passwort" />
+            <select id="wifiEnc" class="glass-input">
+              <option value="WPA">WPA / WPA2</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">Offen (Kein Passwort)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="qrTextFields" class="stack-form hidden">
+          <input type="text" id="qrPlainText" class="glass-input" placeholder="URL oder Text eingeben (z.B. https://...)" />
+        </div>
+
+        <div class="qr-preview-box">
+          <canvas id="qrCanvas" width="220" height="220"></canvas>
+        </div>
+
+        <button id="downloadQrBtn" class="primary-btn full-width">QR-Code als PNG speichern</button>
+      </section>
+    </section>
+
+    <!-- TAB 4: PASSWORT-GENERATOR & AES-TRESOR -->
+    <section id="tab-vault" class="tab-view">
+      <!-- Generator -->
+      <section class="glass-card">
+        <div class="section-head">
+          <h2>Passwort-Generator</h2>
+          <span id="pwStrengthBadge" class="badge-pill">Sehr stark</span>
+        </div>
+
+        <div class="pw-output-box">
+          <input type="text" id="generatedPwOutput" class="pw-display-input" readonly />
+          <button id="copyPwBtn" class="icon-btn" title="Kopieren">📋</button>
+          <button id="regenPwBtn" class="icon-btn" title="Neu generieren">↻</button>
+        </div>
+
+        <div class="slider-row">
+          <label for="pwLengthRange">Länge: <strong id="pwLengthVal">16</strong></label>
+          <input type="range" id="pwLengthRange" min="8" max="32" value="16" />
+        </div>
+
+        <div class="check-row">
+          <label><input type="checkbox" id="pwUpper" checked /> A-Z</label>
+          <label><input type="checkbox" id="pwNumbers" checked /> 0-9</label>
+          <label><input type="checkbox" id="pwSymbols" checked /> !@#$%</label>
+        </div>
+      </section>
+
+      <!-- Verschlüsselter Tresor -->
+      <section class="glass-card">
+        <div class="section-head">
+          <h2>AES-256 Notiz- & PIN-Tresor</h2>
+          <button id="lockVaultBtn" class="link-btn hidden">Sperren 🔒</button>
+        </div>
+
+        <!-- Gesperrte Ansicht -->
+        <form id="vaultUnlockForm" class="stack-form">
+          <p class="muted-label">Gib dein Master-Passwort ein, um den lokal verschlüsselten Tresor zu öffnen (beim ersten Mal wird es neu festgelegt).</p>
+          <div class="inline-form">
+            <input type="password" id="masterPasswordInput" class="glass-input" placeholder="Master-Passwort..." required />
+            <button type="submit" class="primary-btn small">Öffnen</button>
+          </div>
+          <p id="vaultErrorMsg" class="error-text hidden"></p>
+        </form>
+
+        <!-- Entsperrte Ansicht -->
+        <div id="vaultUnlockedArea" class="stack-form hidden">
+          <form id="vaultAddForm" class="stack-form">
+            <input type="text" id="vaultEntryTitle" class="glass-input" placeholder="Titel (z.B. Handy-PIN, Bank-Login)" required />
+            <input type="text" id="vaultEntrySecret" class="glass-input" placeholder="Geheimer Wert / Passwort / Notiz" required />
+            <button type="submit" class="primary-btn full-width">+ Verschlüsselt speichern</button>
+          </form>
+          <div id="vaultEntriesList" class="vault-list"></div>
+        </div>
+      </section>
+    </section>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
